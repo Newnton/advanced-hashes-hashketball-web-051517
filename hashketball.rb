@@ -1,3 +1,4 @@
+require'pry'
 def game_hash()
   hash = {
     home: {
@@ -186,15 +187,74 @@ def big_shoe_rebounds()
   hash = game_hash()
   foo = 0
   big_shoe_player = ""
-  bsteam = ""
+  big_shoe_team = ""
   hash.each do |team, teamdata|
     teamdata[:players].each do |player, stats|
       if stats[:shoe] > foo
         foo = stats[:shoe]
         big_shoe_player = player
-        bsteam = team
+        big_shoe_team = team
       end
     end
   end
-  hash[bsteam][:players][big_shoe_player][:rebounds]
+  hash[big_shoe_team][:players][big_shoe_player][:rebounds]
+end
+
+def most_points_scored()
+  hash = game_hash()
+  foo = 0
+  most_points_player = ""
+  most_points_team = ""
+  hash.each do |team, teamdata|
+    teamdata[:players].each do |player, stats|
+      if stats[:points] > foo
+        foo = stats[:points]
+        most_points_player = player
+        most_points_team = team
+      end
+    end
+  end
+  most_points_player
+end
+
+def winning_team()
+  hash = game_hash()
+  home_points = 0
+  away_points = 0
+  hash[:home][:players].each {|x, y| home_points += y[:points]}
+  hash[:away][:players].each {|x, y| away_points += y[:points]}
+  if home_points < away_points
+    return "Charlotte Hornets"
+  else
+    return "Brooklyn Nets"
+  end
+end
+
+def player_with_longest_name()
+  hash = game_hash()
+  foo = 0
+  lnplayer = ""
+  hash.each do |team, teamdata|
+    teamdata[:players].each do |player, stats|
+      if player.length > foo
+        foo = player.length
+        lnplayer = player
+      end
+    end
+  end
+  lnplayer
+end
+
+def long_name_steals_a_ton?()
+  flag = true
+  hash = game_hash()
+  hash.each do |team, teamdata|
+    teamdata[:players].each do |player, stats|
+      if stats[:steals] > hash[:away][:players][player_with_longest_name()][:steals]
+        flag = false
+        break
+      end
+    end
+  end
+  flag
 end
